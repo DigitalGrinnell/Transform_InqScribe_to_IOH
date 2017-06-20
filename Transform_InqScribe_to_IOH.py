@@ -127,14 +127,14 @@ def gui():
           first, rest = full.split(' ', 1)
           first = first.strip()
           if first not in speakers:
-            speakers[first] = {'number':num, 'class':"<span class='speaker_" + str(num) + "'>", 'full_name':full}
+            speakers[first] = {'number':num, 'class':"<span class='oh_speaker_" + str(num) + "'>", 'full_name':full}
             num += 1
                                     
       """ examine each cue, identify speakers in the transcript.text and modify that text accordingly """
       cue_tags = q.findall('.//cue')
       for tag in cue_tags:
         t = tag.find('transcript')
-        text = t.text.replace('\n', ' ').replace('  ', ' ').replace(' :', ':')
+        text = t.text.replace('\n', ' ').replace('  ', ' ').replace(' :', ':').replace(' |', '|')
         
         words = text.split()
         t.text = ''
@@ -146,8 +146,8 @@ def gui():
             speaker = word.strip('|')
             if speaker in speakers:
               if count > 0:
-                t.text += '</span>'
-              t.text += '\n' + speaker + ': ' + speakers[speaker]['class']
+                t.text += '</span></span>'
+              t.text += "<span class='oh_speaker'>" + speaker + ': ' + speakers[speaker]['class']
               if speaker not in speakers_found:
                 speakers_found.append(speaker)
               count += 1
@@ -158,7 +158,7 @@ def gui():
           else:
             t.text += ' ' + word
 
-        t.text += '</span>'
+        t.text += '</span></span>'
           
         """ now build a proper <speaker> tag from the references found, and apply it """
         speaker_tag = ''
@@ -171,8 +171,9 @@ def gui():
           
       q.write(xmlfile)
 
-      statusText.set("Transcript formatting of `{}' is complete.".format(xmlfile))
+      statusText.set("Speaker formatting for transcript `{}' is complete.".format(xmlfile))
       message.configure(fg="dark green")
+      
 
 
   def button_browse_callback():
