@@ -101,14 +101,7 @@ def gui():
 
       x.close()
       statusText.set("hh:mm:ss values in `{}' have been converted to seconds.".format(xmlfile))
-      message.configure(fg="green")
-
-
-
-
-
-
-
+      message.configure(fg="dark green")
 
 
   def button_format_callback():
@@ -141,7 +134,7 @@ def gui():
       cue_tags = q.findall('.//cue')
       for tag in cue_tags:
         t = tag.find('transcript')
-        text = t.text.replace('\n', '').replace('  ', ' ').replace(' :', ':')
+        text = t.text.replace('\n', ' ').replace('  ', ' ').replace(' :', ':')
         
         words = text.split()
         t.text = ''
@@ -177,11 +170,9 @@ def gui():
         t.text = speaker_tag
           
       q.write(xmlfile)
-      
 
-
-
-
+      statusText.set("Transcript formatting of `{}' is complete.".format(xmlfile))
+      message.configure(fg="dark green")
 
 
   def button_browse_callback():
