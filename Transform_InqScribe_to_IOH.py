@@ -146,8 +146,8 @@ def gui():
             speaker = word.strip('|')
             if speaker in speakers:
               if count > 0:
-                t.text += '</span></span>'
-              t.text += "<span class='oh_speaker'>" + speaker + ': ' + speakers[speaker]['class']
+                t.text += '</span></span>]]>'
+              t.text += "<![CDATA[<span class='oh_speaker'>" + speaker + ': ' + speakers[speaker]['class']
               if speaker not in speakers_found:
                 speakers_found.append(speaker)
               count += 1
@@ -158,7 +158,7 @@ def gui():
           else:
             t.text += ' ' + word
 
-        t.text += '</span></span>'
+        t.text += '</span></span>]]>'
           
         """ now build a proper <speaker> tag from the references found, and apply it """
         speaker_tag = ''
