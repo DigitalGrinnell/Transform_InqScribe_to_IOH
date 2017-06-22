@@ -147,7 +147,8 @@ def gui():
             if speaker in speakers:
               if count > 0:
                 t.text += '</span></span>'
-              t.text += "<span class='oh_speaker'>" + speaker + ': ' + speakers[speaker]['class']
+              # t.text += "<span class='oh_speaker'>" + speaker + ': ' + speakers[speaker]['class']
+              t.text += speakers[speaker]['class'] + speaker + ": " + "<span class='oh_speaker_text'>"
               if speaker not in speakers_found:
                 speakers_found.append(speaker)
               count += 1
