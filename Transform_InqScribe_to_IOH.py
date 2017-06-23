@@ -216,6 +216,8 @@ def gui():
   # ------------------------------------------------
 
   root = Tk()
+  root.title("Transform_InqScribe_to_IOH v1.0")
+  root.geometry("1000x250")
   frame = Frame(root)
   frame.pack()
 
