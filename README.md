@@ -2,16 +2,19 @@
 
 This is a Python 2 script, with GUI, designed to transform oral history transcripts, presumably created using InqScribe, into XML suitable for ingest into the Islandora Oral Histories Solution Pack to populate a TRANSCRIPT datastream and its derivatives.
 
+## The GUI
 Once installed you should run the script using a command like the following (you can easily create an alias and use that if you like):
 
 ~~~
 python /path/to/script/Transform_InqScribe_to_IOH.py
 ~~~
 
-Doing so should launch a simple GUI like this:
+Doing so should launch a simple GUI that looks like this:
 
+![screen shot 2017-06-23 at 9 15 33 am](https://user-images.githubusercontent.com/8472769/27486523-80966e2a-57f6-11e7-9399-ab9ec15e6dd8.png)
 
-The script reads an XML transcript in a format that can be easily created in, and exported from InqScribe.  The required format should look like the following example where key elements of the data are highlighted for reference:
+##Transcript XML Format
+The script reads an XML transcript in a format that can be easily created in and exported from InqScribe.  The required format should look like the following example.  Key elements of this format are documented below:
  
 ~~~
  <transcript>
@@ -51,6 +54,7 @@ Jenny | I never went to that one. Maybe I was too close-minded.
 
 Maggie | Yeah.</scene>
   <scene id="12" in="00:02:01.01" out="00:02:18.14">Heather | What are your first memories of Grinnell?
+~~~
 
 To take advantage of the script's "speaker formatting" capabilities add the following CSS, or something very similar, to your theme.  This CSS produces coloring and formatting like that shown in the example above.
 
