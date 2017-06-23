@@ -199,7 +199,7 @@ span.oh_speaker_3 {
 }
 span.oh_speaker_4 {
   display: block;
-  color: #ff00ff;     /* fuscia */
+  color: #ff00ff;     /* fuschia */
 }
 span.oh_speaker_5 {
   display: block;
