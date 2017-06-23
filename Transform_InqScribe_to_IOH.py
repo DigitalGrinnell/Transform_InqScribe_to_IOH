@@ -21,6 +21,7 @@ import fileinput
 import StringIO
 from lxml import etree
 from Tkinter import *
+from shutil import copyfile
 
 
 def get_IOH_filename(input_file_name):
@@ -174,7 +175,61 @@ def gui():
 
       statusText.set("Speaker formatting for transcript `{}' is complete.".format(xmlfile))
       message.configure(fg="dark green")
-      
+
+
+  def button_reformat_callback():
+    """ what to do when the "Reformat" button is pressed """
+    
+    xmlfile = entry.get()
+    if xmlfile.rsplit(".")[-1] != "xml":
+      statusText.set("Filename must have a .xml extension!")
+      message.configure(fg="red")
+      return
+
+    IOH_xmlfile = get_IOH_filename(xmlfile)
+    copyfile(xmlfile, IOH_xmlfile)
+
+    """ make it pretty """
+    parser = etree.XMLParser(resolve_entities=False, strip_cdata=False)
+    document = etree.parse(IOH_xmlfile, parser)
+    document.write(IOH_xmlfile, pretty_print=True, encoding='utf-8')
+
+    """ identify all the speaker tags """
+    q = etree.parse(IOH_xmlfile)
+    speaker_tags = q.findall('.//speaker')
+    speakers = dict()
+    num = 1
+        
+    for tag in speaker_tags:
+      if tag.text:
+        full = tag.text.strip()
+        first, rest = full.split(' ', 1)
+        first = first.strip()
+        if first not in speakers:
+          speakers[first] = {'number': num, 'class': "<span class='oh_speaker_" + str(num) + "'>", 'full_name': full}
+          num += 1
+        
+    """ examine each cue, identify THE speaker and modify the cue accordingly """
+    cue_tags = q.findall('.//cue')
+    speakers_found = []
+
+    for tag in cue_tags:
+      s = tag.find('speaker')
+      first, rest = s.text.split(' ', 1)
+      first = first.strip()
+      if first not in speakers_found:
+        speakers_found.append(first)
+      t = tag.find('transcript')
+      text = t.text.replace('\n', ' ').replace('  ', ' ').replace(' :', ':').replace(' |', '|')
+      t.text = ''
+      t.text += speakers[first]['class'] + first + ": " + "<span class='oh_speaker_text'>" + text + '</span></span>'
+
+    q.write(IOH_xmlfile)
+    entry.delete(0, END)
+    entry.insert(0, IOH_xmlfile)
+
+    statusText.set("Speaker reformatting for transcript `{}' is complete.".format(IOH_xmlfile))
+    message.configure(fg="dark green")
 
 
   def button_browse_callback():
@@ -217,7 +272,7 @@ def gui():
 
   root = Tk()
   root.title("Transform_InqScribe_to_IOH v1.0")
-  root.geometry("1000x250")
+  root.geometry("1000x275")
   frame = Frame(root)
   frame.pack()
 
@@ -235,11 +290,13 @@ def gui():
   button_transform = Button(root, text="Transform InqScribe to IOH XML", command=button_transform_callback)
   button_hms = Button(root, text="Convert hh:mm:ss to Seconds", command=button_hms_callback)
   button_format = Button(root, text="Format Speakers", command=button_format_callback)
+  button_reformat = Button(root, text="Reformat an Old Transcript", command=button_reformat_callback)
   button_exit = Button(root, text="Exit", command=sys.exit)
   button_browse.pack()
   button_transform.pack()
   button_hms.pack()
   button_format.pack()
+  button_reformat.pack()
   button_exit.pack()
 
   separator = Frame(root, height=2, bd=1, relief=SUNKEN)
