@@ -220,6 +220,11 @@ def gui():
       if first not in speakers_found:
         speakers_found.append(first)
       t = tag.find('transcript')
+      if t.text is None:
+        statusText.set("Transcript has no text at source line " + str(t.sourceline) + "!")
+        message.configure(fg="red")
+        return
+
       text = t.text.replace('\n', ' ').replace('  ', ' ').replace(' :', ':').replace(' |', '|')
       t.text = ''
       t.text += speakers[first]['class'] + first + ": " + "<span class='oh_speaker_text'>" + text + '</span></span>'
