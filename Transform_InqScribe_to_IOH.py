@@ -203,7 +203,11 @@ def gui():
     for tag in speaker_tags:
       if tag.text:
         full = tag.text.strip()
-        first, rest = full.split(' ', 1)
+        if ' ' not in full:
+          first = full
+        else:
+          first, rest = full.split(' ', 1)
+
         first = first.strip()
         if first not in speakers:
           speakers[first] = {'number': num, 'class': "<span class='oh_speaker_" + str(num) + "'>", 'full_name': full}
@@ -215,7 +219,10 @@ def gui():
 
     for tag in cue_tags:
       s = tag.find('speaker')
-      first, rest = s.text.split(' ', 1)
+      if ' ' not in s.text.strip():
+        first = s.text.strip()
+      else:
+        first, rest = s.text.strip().split(' ', 1)
       first = first.strip()
       if first not in speakers_found:
         speakers_found.append(first)
@@ -227,7 +234,12 @@ def gui():
 
       text = t.text.replace('\n', ' ').replace('  ', ' ').replace(' :', ':').replace(' |', '|')
       t.text = ''
-      t.text += speakers[first]['class'] + first + ": " + "<span class='oh_speaker_text'>" + text + '</span></span>'
+      try:
+        t.text += speakers[first]['class'] + first + ": " + "<span class='oh_speaker_text'>" + text + '</span></span>'
+      except KeyError:
+        statusText.set("Transcript 'KeyError' at source line " + str(t.sourceline) + "! Please investigate.")
+        message.configure(fg="red")
+        return
 
     q.write(IOH_xmlfile)
     entry.delete(0, END)
