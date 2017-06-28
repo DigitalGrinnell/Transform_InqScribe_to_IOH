@@ -25,8 +25,10 @@ from shutil import copyfile
 
 
 def get_IOH_filename(input_file_name):
+  """ IOH now treats an underscore here as indication of a language, like _english, so change any/all underscores to dashes! """
+  input_file_name.replace("_", "-")
   parts = os.path.split(input_file_name)
-  return parts[0] + "/IOH_" + parts[1]
+  return parts[0] + "/IOH-" + parts[1]
 
 
 def gui():
