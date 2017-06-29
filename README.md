@@ -205,4 +205,36 @@ span.oh_speaker_5 {
   display: block;
   color: #ffbf00;     /* orange */
 }
+~~~
+
+## New "Reformat an Old Transcript" Feature
+
+In June 2017 an additional "Reformat an Old Transcript" feature was added to the script.  This feature may be specific to Grinnell College and to Digital Grinnell (https://digital.grinnell.edu), but it could easily be re-purposed for other, similar features.
+
+The feature, as currently written, is designed to add speaker-formatting to older XML.  Specificaly, it converts XML of the form...
+
+~~~
+<cues>
+  <cue>
+    <speaker>Camarin Madigan</speaker>
+    <start>0.16</start>
+    <end>45.29</end>
+    <transcript>My name is Camarin Madigan. When I went to Grinnell my name was... </transcript>
+  </cue>
+  ...
+</cues>
+~~~
+
+...into speaker-formatted XML of the form...
+
+~~~
+<cues>
+  <cue>
+    <speaker>Camarin Madigan</speaker>
+    <start>0.16</start>
+    <end>45.29</end>
+    <transcript>&lt;span class='oh_speaker_1'&gt;Camarin: &lt;span class='oh_speaker_text'&gt;My name is Camarin Madigan. When I went to Grinnell my name was...&lt;/span&gt;&lt;/span&gt;</transcript>
+  </cue>
+  ~~~
+
 
