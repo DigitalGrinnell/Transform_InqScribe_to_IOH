@@ -32,11 +32,11 @@ You typically use this script like so:
 
 2) Click the __Transform InqScribe to IOH XML__ button.  
 
-    > This action invokes the XSLT in __Transform_InqScribe_to_IOH.xsl__ to transform the InqScribe XML \<transcript> and \<scene> tags into \<cues> and \<cue> tags reqiured for IOH ingest. It also transforms 'in' and 'out' attributes to \<start> and \<end> tags, and wraps the text of each \<scene> inside \<transcript> tags within each \<cue>. Changes are saved in a new XML file named to match the input filename prefixed by **IOH_**.  The new file is automatically 'selected' and its path now appears in the box at the top of the GUI.
+    > This action invokes the XSLT in __Transform_InqScribe_to_IOH.xsl__ to transform the InqScribe XML \<transcript> and \<scene> tags into \<cues> and \<cue> tags reqiured for IOH ingest. It also transforms 'in' and 'out' attributes to \<start> and \<end> tags, and wraps the text of each \<scene> inside \<transcript> tags within each \<cue>. Changes are saved in a new XML file named to match the input filename prefixed by **IOH-**.  The new file is automatically 'selected' and its path now appears in the box at the top of the GUI.
 
 3) Click the __Convert hh:mm:ss to Seconds__ button.
 
-    > This action converts \<start> and \<end> values from hours:minutes:seconds notation to the decimal seconds notation required for IOH. The changes are saved directly in the selected **IOH_** file. This file should be suitable for ingest into IOH.
+    > This action converts \<start> and \<end> values from hours:minutes:seconds notation to the decimal seconds notation required for IOH. The changes are saved directly in the selected **IOH-** file. This file should be suitable for ingest into IOH.
     
 4) Optionally click the __Format Speakers__ button.
 
@@ -54,7 +54,7 @@ You typically use this script like so:
         Maggie: Where you live.
         Jenny: My name is Jenny
       
-    > If there are no errors, the format changes are written directly into the selected **IOH_** file.  This file should be suitable for ingest into IOH with formatted speaker names.
+    > If there are no errors, the format changes are written directly into the selected **IOH-** file.  This file should be suitable for ingest into IOH with formatted speaker names.
 
 ## Transcript XML Format
 
