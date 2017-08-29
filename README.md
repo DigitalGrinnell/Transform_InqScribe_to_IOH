@@ -100,6 +100,8 @@ Maggie | Yeah.</scene>
   <scene id="12" in="00:02:01.01" out="00:02:18.14">Heather | What are your first memories of Grinnell?
 ~~~
 
+**Attention!**  You may include as many \<speaker> tags as you wish in your transcript, and they may occur ANYWHERE within the transcript, **but only the first \<speaker> tag in each \<scene> will be recognized!**
+
 ## XML Cues for Ingest in IOH
 
 Output from the script should be an XML file with a format and content like the following:
