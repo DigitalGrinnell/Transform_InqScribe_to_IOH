@@ -52,7 +52,12 @@ def gui():
         line = line.replace('&gt;', '>')
         print line,
       x.close()
-  
+
+      """ read the file again looking for looooooonnnnnnng scenes """
+      x = fileinput.input(xmlfile, inplace=1)
+      lineCount = 0;
+      numChar = 0;
+      
       """ make it pretty """
       parser = etree.XMLParser(resolve_entities=False, strip_cdata=False)
       document = etree.parse(xmlfile, parser)
@@ -143,15 +148,17 @@ def gui():
         t.text = ''
         count = 0
         speakers_found = []
-        
+
         for word in words:
           if word.endswith('|'):
             speaker = word.strip('|')
+
             if speaker in speakers:
               if count > 0:
                 t.text += '</span></span>'
-              # t.text += "<span class='oh_speaker'>" + speaker + ': ' + speakers[speaker]['class']
               t.text += speakers[speaker]['class'] + speaker + ": " + "<span class='oh_speaker_text'>"
+              # t.text += "<span class='oh_speaker'>" + speaker + ': ' + speakers[speaker]['class']
+
               if speaker not in speakers_found:
                 speakers_found.append(speaker)
               count += 1
@@ -178,6 +185,75 @@ def gui():
       statusText.set("Speaker formatting for transcript `{}' is complete.".format(xmlfile))
       message.configure(fg="dark green")
 
+
+  def button_analyze_callback():
+      """ what to do when the "Analyze" button is pressed """
+    
+      xmlfile = entry.get()
+    
+      if xmlfile.rsplit(".")[-1] != "xml":
+          statusText.set("Filename must have a .xml extension!")
+          message.configure(fg="red")
+          return
+    
+      else:
+          """ examine each cue, count number of lines of text and report any longer than 10 lines """
+          problem_cues = "Long cue start times: "
+          problems = 0
+          q = etree.parse(xmlfile)
+          cue_tags = q.findall('.//cue')
+          cue_num = 0
+          
+          for tag in cue_tags:
+              t = tag.find('start')
+              start = int(float(t.text))
+              m, s = divmod(start, 60)
+              cue_start = '{:d}:{:02d} '.format(m,s)
+                            
+              t = tag.find('transcript')
+              text = t.text.replace('\n', ' ').replace('  ', ' ').replace(' :', ':').replace(' |', '|')
+            
+              words = text.split()
+              cue_lines = 0
+              cue_chars = 0
+              assumed_line_max = 80  # assuming 80 characters per line for a max target
+            
+              for word in words:
+                  if word.endswith('>'):    # ignore all tags
+                      continue
+                  if word.startswith('<'):  # ignore all tags
+                      continue
+                                       
+                  if word.endswith(':'):    # found a new speaker, new line
+                      cue_lines += 1
+                      cue_chars = len(word) - 20    # accounts for the class='oh_speaker_x'> tag
+                    
+                  else:
+                      cue_chars += len(word) + 1
+                      if cue_chars > assumed_line_max:
+                          cue_lines += 1
+                          cue_chars = 0
+   
+              """ done with cue text analysis...report if necessary """
+              if cue_lines == 0:
+                  statusText.set("Cue `{}' is EMPTY. Remove it before proceeding!".format(cue_num))
+                  message.configure(fg="red")
+                  return
+              if cue_lines > 10:
+                  problem_cues += str(cue_start)
+                  problems += 1
+              cue_num += 1
+
+          """ analysis is complete.  report """
+          if problems == 0:
+            statusText.set("Analysis is complete, no problems found in transcript `{}'.".format(xmlfile))
+            message.configure(fg="dark green")
+            return
+          
+          if problems > 0:
+              statusText.set(problem_cues)
+              message.configure(fg="red")
+              return
 
   def button_reformat_callback():
     """ what to do when the "Reformat" button is pressed """
@@ -291,7 +367,7 @@ def gui():
 
   root = Tk()
   root.title("Transform_InqScribe_to_IOH v1.0")
-  root.geometry("1000x275")
+  root.geometry("1000x300")
   frame = Frame(root)
   frame.pack()
 
@@ -309,12 +385,14 @@ def gui():
   button_transform = Button(root, text="Transform InqScribe to IOH XML", command=button_transform_callback)
   button_hms = Button(root, text="Convert hh:mm:ss to Seconds", command=button_hms_callback)
   button_format = Button(root, text="Format Speakers", command=button_format_callback)
+  button_analyze = Button(root, text="Analyzie IOH Cues", command=button_analyze_callback)
   button_reformat = Button(root, text="Reformat an Old Transcript", command=button_reformat_callback)
   button_exit = Button(root, text="Exit", command=sys.exit)
   button_browse.pack()
   button_transform.pack()
   button_hms.pack()
   button_format.pack()
+  button_analyze.pack()
   button_reformat.pack()
   button_exit.pack()
 
